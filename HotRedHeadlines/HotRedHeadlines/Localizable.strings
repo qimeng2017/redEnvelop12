@@ -1,0 +1,13 @@
+/* 
+  Localizable.strings
+  HotRedHeadlines
+
+  Created by 邹壮壮 on 2016/12/12.
+  Copyright © 2016年 邹壮壮. All rights reserved.
+*/
+
+
+/* 服务器出错 */
+"serviceError"="非常抱歉！服务器开小差了，暂时不能发红包，请稍后再来！谢谢您的支持。";
+"inviteShare"="你有个红包还未拆开呢！快下载领取吧~看新闻就能月赚366元";
+

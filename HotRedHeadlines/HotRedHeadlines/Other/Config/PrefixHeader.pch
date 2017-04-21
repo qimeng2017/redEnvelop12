@@ -1,0 +1,283 @@
+//
+//  PrefixHeader.pch
+//  HotRedHeadlines
+//
+//  Created by 邹壮壮 on 2016/12/5.
+//  Copyright © 2016年 邹壮壮. All rights reserved.
+//
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+
+//版本判断
+#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
+//通用设备判断
+#define IS_OS_7_OR_LATER    ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
+//Log
+//#if DEBUG
+//#define NSLog(format, ...) NSLog(@"\n文件: %@ \n方法: %s \n内容: %@ \n行数: %d", [[[NSString stringWithFormat:@"%s",__FILE__] componentsSeparatedByString:@"/"] lastObject],  __FUNCTION__, [NSString stringWithFormat:format, ##__VA_ARGS__], __LINE__);
+//#else
+//#define NSLog(format,...)
+//#endif
+
+
+// debug time
+#ifdef DEBUG
+
+#define DO_DEBUG_TIME_END(file, line)     { NSTimeInterval __debug_time_end = [[NSDate date] timeIntervalSince1970];\
+NSLog(@"%@:%d: DEBUG TIME: %f", file, line, __debug_time_end - __debug_time_begin);}
+
+#define DEBUG_TIME_BEGIN      NSTimeInterval __debug_time_begin = [[NSDate date] timeIntervalSince1970];
+#define DEBUG_TIME_END        DO_DEBUG_TIME_END([[NSString stringWithUTF8String:__FILE__] lastPathComponent], __LINE__)
+
+#define DO_PRINT_TIME(file, line)   NSLog(@"%@:%d: nowtime %f", file, line, [[NSDate date] timeIntervalSince1970]);
+#define PRINT_TIME      DO_PRINT_TIME([[NSString stringWithUTF8String:__FILE__] lastPathComponent], __LINE__)
+
+#else
+
+#define DEBUG_TIME_BEGIN      ;
+#define DEBUG_TIME_END        ;
+#define PRINT_TIME            ;
+
+#endif
+//宽高
+#define kScreenWidth [[UIScreen mainScreen] bounds].size.width //屏幕宽
+#define kScreenHeight [[UIScreen mainScreen] bounds].size.height //屏幕高
+#define SCREEN_WIDTH self.view.frame.size.width
+#define SCREEN_HEIGHT self.view.frame.size.height
+#define kScreenWidthP [[UIScreen mainScreen]bounds].size.width/375.0f
+#define kScale ([[UIScreen mainScreen]bounds].size.width/375.f)
+//颜色
+#define RGBA(R,G,B,A)  [UIColor colorWithRed:R/255.0f green:G/255.0f blue:B/255.0f alpha:A]
+#define sRGBA [UIColor colorWithDisplayP3Red:R/255.0f green:G/255.0f blue:B/255.0f alpha:A];
+#define kColorM ([UIColor colorWithRed:1.f green:102.f/255.f blue:0.f alpha:1.f])
+#define kColorMHighlight ([UIColor colorWithRed:1.f green:155.f/255.f blue:82.f/255.f alpha:1.f])
+#define kColorCellSelected ([UIColor colorWithRed:238.f/255.f green:238.f/255.f blue:238.f/255.f alpha:1.f])
+//NSUserDefaults
+#define UserDefaultSetObjectForKey(__VALUE__,__KEY__) \
+{\
+[[NSUserDefaults standardUserDefaults] setObject:__VALUE__ forKey:__KEY__];\
+[[NSUserDefaults standardUserDefaults] synchronize];\
+}
+
+/**
+ *  get the saved objects       获得存储的对象
+ */
+#define UserDefaultObjectForKey(__KEY__)  [[NSUserDefaults standardUserDefaults] objectForKey:__KEY__]
+
+/**
+ *  delete objects      删除对象
+ */
+#define UserDefaultRemoveObjectForKey(__KEY__) \
+{\
+[[NSUserDefaults standardUserDefaults] removeObjectForKey:__KEY__];\
+[[NSUserDefaults standardUserDefaults] synchronize];\
+}
+
+#define SET_NAVIGATION_LIMIT_TITLE_SUBTITLE(title, subTitle, limit) do {\
+[self.navigationItem.titleView removeFromSuperview];\
+UIView *titleView = [[UIView alloc] initWithFrame:CGRectMake(([UIScreen mainScreen].bounds.size.width - limit)/2, self.navigationItem.titleView.frame.origin.y, limit, 44)];\
+self.navigationItem.titleView = titleView;\
+UILabel *firstLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 10, titleView.frame.size.width, 16)];\
+firstLabel.backgroundColor = [UIColor clearColor];\
+firstLabel.text = title;\
+firstLabel.font = [UIFont systemFontOfSize:16];\
+firstLabel.textAlignment = NSTextAlignmentCenter;\
+firstLabel.adjustsFontSizeToFitWidth = YES;\
+firstLabel.textColor = [UIColor darkGrayColor];\
+[titleView addSubview:firstLabel];\
+\
+UILabel *secondLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, firstLabel.frame.origin.y + firstLabel.frame.size.height, titleView.frame.size.width, 12)];\
+secondLabel.backgroundColor = [UIColor clearColor];\
+secondLabel.font = [UIFont systemFontOfSize:10];\
+secondLabel.text = subTitle;\
+secondLabel.textAlignment = NSTextAlignmentCenter;\
+secondLabel.textColor = [UIColor darkGrayColor];\
+[titleView addSubview:secondLabel];\
+} while(0)
+
+#define SET_NAVIGATION_TITLE_SUBTITLE(title, subTitle) do {\
+SET_NAVIGATION_LIMIT_TITLE_SUBTITLE(title, subTitle, 150);\
+} while(0)
+
+#define SET_NAVIGATION_TITLE_SUBTITLE_SELECTOR(title, subTitle) do {\
+SET_NAVIGATION_LIMIT_TITLE_SUBTITLE(title, subTitle, 150);\
+} while(0)
+
+#define SET_NAVIGATION_LIMIT_TITLE(title ,limit, mode)     do {\
+[self.navigationItem.titleView removeFromSuperview];\
+UILabel  *titleLabel = [[UILabel alloc] init];\
+titleLabel.text = title;\
+titleLabel.textAlignment = NSTextAlignmentCenter;\
+titleLabel.backgroundColor = [UIColor clearColor];\
+titleLabel.font = [UIFont systemFontOfSize:16];\
+titleLabel.textColor = [UIColor darkGrayColor];\
+titleLabel.lineBreakMode = mode;\
+titleLabel.frame = CGRectMake(([UIScreen mainScreen].bounds.size.width - limit)/2, self.navigationItem.titleView.frame.origin.y, limit, 20);\
+self.navigationItem.titleView = titleLabel;\
+} while(0)
+
+#define SET_NAVIGATION_TITLE_LINEBREAKMODE(title ,mode) do {\
+SET_NAVIGATION_LIMIT_TITLE(title , 150, mode);\
+} while(0)
+
+#define SET_NAVIGATION_TITLE(title) do {\
+SET_NAVIGATION_TITLE_LINEBREAKMODE(title ,NSLineBreakByTruncatingTail);\
+} while(0)
+
+
+#define kLargeSize 45
+#define kLargeWidth 60
+
+#pragma mark - 导航栏左边按钮 RGBCOLOR(110.f,124.f, 141.f)
+#define ADD_LEFT_BAR_TITLE(title, function)  do {\
+UIButton  *leftButton = [UIButton buttonWithType:UIButtonTypeCustom];\
+leftButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;\
+[leftButton setTitle:title forState:UIControlStateNormal];\
+leftButton.titleLabel.font = [UIFont systemFontOfSize:15];\
+[leftButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];\
+[leftButton setTitleColor:[UIColor colorWithRed:(134)/255.0f green:(137)/255.0f blue:(141)/255.0f alpha:1] forState:UIControlStateHighlighted];\
+[leftButton addTarget:self action:@selector(function) forControlEvents:UIControlEventTouchUpInside];\
+[leftButton sizeToFit];\
+leftButton.frame = CGRectMake(0, 0, kLargeWidth, kLargeSize);\
+UIBarButtonItem  *leftItem = [[UIBarButtonItem alloc] initWithCustomView:leftButton];\
+self.navigationItem.leftBarButtonItem = leftItem;\
+} while(0)
+
+#define ADD_LEFT_BAR_IMAGENAME(fileName, function)  do {\
+UIButton  *leftButton = [UIButton buttonWithType:UIButtonTypeCustom];\
+leftButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;\
+[leftButton setImage:[UIImage imageNamed:fileName] forState:UIControlStateNormal];\
+[leftButton addTarget:self action:@selector(function) forControlEvents:UIControlEventTouchUpInside];\
+[leftButton sizeToFit];\
+leftButton.frame = CGRectMake(0, 0, kLargeWidth, kLargeSize);\
+UIBarButtonItem  *leftItem = [[UIBarButtonItem alloc] initWithCustomView:leftButton];\
+self.navigationItem.leftBarButtonItem = leftItem;\
+} while(0)
+
+
+#define ADD_BACK(back)  do {\
+ADD_LEFT_BAR_IMAGENAME(@"btn_back", back);\
+} while (0)
+
+#define ADD_BACK_HOME_BUTTON(backMethod, homeMethod)     do {\
+UIView *left_view = [[UIView alloc] init];\
+CGFloat space = 10;\
+UIButton *left_btn = [UIButton buttonWithType:UIButtonTypeCustom];\
+[left_btn setImage:[UIImage imageNamed:@"btn_back"] forState:UIControlStateNormal];\
+left_btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;\
+[left_btn sizeToFit];\
+left_btn.frame = CGRectMake(0, 0, left_btn.frame.size.width + 25, kLargeSize);\
+[left_btn addTarget:self action:@selector(backMethod) forControlEvents:UIControlEventTouchUpInside];\
+[left_view addSubview:left_btn];\
+\
+UIButton *home_btn = [UIButton buttonWithType:UIButtonTypeCustom];\
+home_btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;\
+[home_btn setTitle:@"关闭" forState:UIControlStateNormal];\
+home_btn.titleLabel.font = [UIFont systemFontOfSize:15];\
+[home_btn setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];\
+[home_btn setTitleColor:[UIColor colorWithRed:(134)/255.0f green:(137)/255.0f blue:(141)/255.0f alpha:1] forState:UIControlStateHighlighted];\
+[home_btn sizeToFit];\
+home_btn.frame = CGRectMake(left_btn.frame.size.width + space, 0, home_btn.frame.size.width + 25, kLargeSize);\
+[home_btn addTarget:self action:@selector(homeMethod) forControlEvents:UIControlEventTouchUpInside];\
+\
+[left_view addSubview:home_btn];\
+left_view.frame = CGRectMake(0, 0, left_btn.frame.size.width + home_btn.frame.size.width + space, kLargeSize);\
+UIBarButtonItem *left_item = [[UIBarButtonItem alloc] initWithCustomView:left_view];\
+self.navigationItem.leftBarButtonItem = left_item;\
+} while (0)
+
+#pragma mark - 导航栏右边按钮
+#define ADD_RIGHT_BAR_TITLE(title, function)  do {\
+UIButton  *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];\
+rightButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;\
+[rightButton setTitle:title forState:UIControlStateNormal];\
+rightButton.titleLabel.font = [UIFont systemFontOfSize:15];\
+[rightButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];\
+[rightButton setTitleColor:[UIColor colorWithRed:(134)/255.0f green:(137)/255.0f blue:(141)/255.0f alpha:1] forState:UIControlStateHighlighted];\
+[rightButton addTarget:self action:@selector(function) forControlEvents:UIControlEventTouchUpInside];\
+[rightButton sizeToFit];\
+rightButton.frame = CGRectMake(0, 0, kLargeWidth, kLargeSize);\
+UIBarButtonItem  *rightItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];\
+self.navigationItem.rightBarButtonItem = rightItem;\
+} while(0)
+
+#define ADD_RIGHT_BAR_TITLE_DISABLE(title)  do {\
+UIButton  *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];\
+rightButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;\
+[rightButton setTitle:title forState:UIControlStateNormal];\
+rightButton.titleLabel.font = [UIFont systemFontOfSize:15];\
+rightButton.enabled = NO;\
+[rightButton setTitleColor:colorFromRGB(0xbababa) forState:UIControlStateNormal];\
+[rightButton sizeToFit];\
+rightButton.frame = CGRectMake(0, 0, kLargeWidth, kLargeSize);\
+UIBarButtonItem  *rightItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];\
+self.navigationItem.rightBarButtonItem = rightItem;\
+} while(0)
+
+#define ADD_RIGHT_BAR_IMAGENAME(fileName, function)  do {\
+UIButton  *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];\
+rightButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;\
+[rightButton setImage:[UIImage imageNamed:fileName] forState:UIControlStateNormal];\
+[rightButton addTarget:self action:@selector(function) forControlEvents:UIControlEventTouchUpInside];\
+[rightButton sizeToFit];\
+rightButton.frame = CGRectMake(0, 0, kLargeWidth, kLargeSize);\
+UIBarButtonItem  *rightItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];\
+self.navigationItem.rightBarButtonItem = rightItem;\
+} while(0)
+#define  LSTR(str)  NSLocalizedString(str, nil)
+
+
+
+#if DEBUG
+//@"http://106.14.77.108:6718"//测试服务器
+//https://user.hongbao.aso110.com:6721
+#define RED_ENVELOP_HOST_NAME @"https://user.hongbao.aso110.com:6721"
+#define INFAMATION_HOST_NAME  @"https://news.hongbao.aso110.com:3321"
+#else
+#define RED_ENVELOP_HOST_NAME @"https://user.hongbao.aso110.com:6721"
+#define INFAMATION_HOST_NAME @"https://news.hongbao.aso110.com:3321"
+#endif
+
+typedef enum ScrollDirection {
+    ScrollDirectionNone,
+    ScrollDirectionRight,
+    ScrollDirectionLeft,
+    ScrollDirectionUp,
+    ScrollDirectionDown,
+    ScrollDirectionCrazy,
+} ScrollDirection;
+
+
+#define USERINFO @"userInfo"
+#define USER_REDBAG_INFO @"user_redbag_info"
+#define USER_CODE @"usercode"
+#define IS_TAPPED_TO_REVIEW @"im_wode_is_reminded_review1" //是否评论
+#define DATE_READY_FOR_REVIEW @"im_wode_date_begin_use_this_app" //打开应用
+#define DATE_TO_BEGIN @"DATE_TO_BEGIN" //开始点击去评论
+#define DATE_TO_END  @"DATE_TO_END"    //从 appstory 返回的时间
+#define ISAPPSTROY @"ISAPPSTROY"       //是否是从 appstory 返回
+#define REVIEW_THE_STATUS @"Review_the_status" //审核状态
+//wx
+#define kAuthScope  @"snsapi_message,snsapi_userinfo,snsapi_friend,snsapi_contact"
+#define kAuthOpenID  @"wxf3b77d4ac504f6e0"
+#define kAuthOpensecret @"a5c5e794b35ef46f1e4751b0ff6ec64a"
+#define kAuthState   @"xxx"
+
+//um
+#define kUMAppkey @"5838ff52f29d985ff700262e"
+//bugly
+#define bugly_appid @"33d017e891"
+#define bugly_appkey @"41cc7457-08ed-469d-95c6-c7ae7641c41f"
+#import "HRconfig.h"
+//第三方库
+#import <SDWebImage/UIImageView+WebCache.h>
+#import <DKNightVersion.h>
+#import <SVProgressHUD.h>
+#import <MJExtension.h>
+#import <SDWebImage/UIImageView+WebCache.h>
+#import <Masonry/Masonry.h>
+#import <AFNetworking/AFNetworking.h>
+#import "UIColor+Utilts.h"
+#import <UMMobClick/MobClick.h>
+#endif /* PrefixHeader_pch */

@@ -1,0 +1,28 @@
+target 'HotRedHeadlines' do
+
+pod 'MJRefresh'
+pod 'MJExtension'
+pod 'SDWebImage'
+pod 'pop'
+pod 'SVProgressHUD'
+pod 'DACircularProgress'
+pod 'FMDB'
+pod 'NJKWebViewProgress'
+pod 'DKNightVersion'
+pod 'AFNetworking'
+pod 'CYLTableViewPlaceHolder'
+pod 'Masonry'
+pod 'UMengAnalytics'
+pod 'TYAttributedLabel'
+pod 'MMPopLabel'
+pod 'Google-Mobile-Ads-SDK'
+pod 'Bugly'
+end
+
+target 'HotRedHeadlinesTests’ do
+
+end
+
+target 'HotRedHeadlinesUITests' do
+
+end
